@@ -1,0 +1,51 @@
+/* Cross-component workbench ordering. */
+.workbench {
+  gap: 0 34px;
+}
+
+.workbench > .instrument-bar {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.workbench > .passport-stack {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.workbench > .evidence-panel {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+@media (max-width: 1050px) {
+  .workbench {
+    gap: 28px;
+  }
+
+  .workbench > .instrument-bar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .workbench > .evidence-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .workbench > .passport-stack {
+    grid-column: 1;
+    grid-row: 3;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .workbench {
+    gap: 22px;
+  }
+
+  .scan-button span {
+    display: none;
+  }
+}
