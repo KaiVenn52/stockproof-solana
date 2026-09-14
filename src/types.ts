@@ -1,5 +1,5 @@
 export type CheckState = 'pass' | 'caution' | 'fail' | 'unknown'
-export type PassportState = 'PASS' | 'CAUTION' | 'UNVERIFIABLE'
+export type PassportState = 'PASS' | 'CAUTION' | 'BLOCKED' | 'UNVERIFIABLE'
 export type DataMode = 'live' | 'snapshot'
 
 export interface MarketInstrument {
@@ -44,6 +44,9 @@ export interface TimelineEvent {
 }
 
 export interface Passport {
+  schemaName: 'stockproof.passport'
+  schemaVersion: '1.0.0'
+  passportId: string
   researchQuestion?: string
   instrument: MarketInstrument
   state: PassportState

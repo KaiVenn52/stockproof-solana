@@ -16,6 +16,9 @@ function run(symbol) {
 
 for (const symbol of symbols) {
   const passport = await run(symbol)
+  assert.equal(passport.schemaName, 'stockproof.passport')
+  assert.equal(passport.schemaVersion, '1.0.0')
+  assert.ok(passport.passportId.includes(`:${symbol}:`))
   assert.equal(passport.mode, 'live')
   assert.equal(passport.instrument.symbol, symbol)
   assert.equal(passport.instrument.network, 'Solana')
@@ -24,5 +27,6 @@ for (const symbol of symbols) {
   assert.ok(passport.checks.find((check) => check.id === 'identity')?.state === 'pass')
   assert.ok(passport.checks.find((check) => check.id === 'token-program')?.state === 'pass')
   assert.ok(passport.evidence.some((item) => item.source === 'Solana mainnet RPC'))
-  console.log(`${symbol}: ${passport.state} · slot ${passport.rpcSlot} · reserve ${(passport.reserveCoverage * 100).toFixed(3)}%`)
+  assert.ok(Number.isFinite(passport.reserveCoverage) && passport.reserveCoverage >= 0)
+  console.log(`${symbol}: ${passport.state} · schema ${passport.schemaVersion} · slot ${passport.rpcSlot} · reserve ${(passport.reserveCoverage * 100).toFixed(3)}%`)
 }

@@ -14,6 +14,7 @@ StockProof provides one deterministic preflight artifact:
 
 - `PASS` — required issuer and onchain checks agree.
 - `CAUTION` — the asset is identifiable, but a visible warning remains.
+- `BLOCKED` — a required identity, token-program, multiplier, or reserve check failed.
 - `UNVERIFIABLE` — a required source is missing, so no clean conclusion is issued.
 
 It never predicts price direction, recommends a trade, or turns missing data into a negative fact.
@@ -29,6 +30,20 @@ Solana getAccountInfo + getTokenSupply┘            │                 │
 ```
 
 The current allowlist covers `AAPLx`, `NVDAx`, `TSLAx`, and `QQQx` on Solana mainnet.
+
+## Consume a passport
+
+```js
+const response = await fetch('https://stockproof-solana.vercel.app/api/scan?symbol=TSLAx')
+if (!response.ok) throw new Error('Passport unavailable')
+
+const passport = await response.json()
+if (passport.schemaVersion !== '1.0.0' || passport.mode !== 'live' || passport.state !== 'PASS') {
+  throw new Error(`Asset policy stopped: ${passport.state}`)
+}
+```
+
+The API permits cross-origin `GET` requests and returns a `stockproof.passport` v1.0.0 object. See the [integration contract](docs/passport-integration.md) and [JSON Schema](docs/stockproof-passport.schema.json). The live UI can also copy or download the exact passport JSON.
 
 ## Run locally
 

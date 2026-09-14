@@ -1,6 +1,7 @@
 node_modules
 dist
 .vercel
+.superstack/
 .env*
 benchmark/
 design/

@@ -36,14 +36,14 @@ Open the Solana mint evidence and click `Open Solana Explorer`.
 
 “Every passport carries provenance. Here is the same mint on Solana Explorer, plus the confirmed RPC slot, token program, source endpoint, and capture time used for this verdict.”
 
-## 1:58–2:12 — Second state
+## 1:58–2:12 — Machine-readable policy
 
-Return and select TSLAx.
+Return, select TSLAx, then click `Download`.
 
-“Switching assets runs the entire graph again. TSLAx currently clears the required identity, Token-2022, multiplier, reserve, and schedule checks, so it receives PASS.”
+“Switching assets runs the entire graph again. TSLAx currently clears the required checks, so it receives PASS. The result is not trapped in this dashboard: this is a versioned JSON passport another app can enforce.”
 
 ## 2:12–2:20 — Close
 
 Open Surface.
 
-“StockProof makes tokenized equities safer to compose, not merely easier to display. The next step is a signed JSON passport and SDK for Solana apps.”
+“StockProof makes tokenized equities safer to compose, not merely easier to display. Required failures block, missing evidence abstains, and every decision stays attributable.”

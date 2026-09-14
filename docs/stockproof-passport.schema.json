@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KaiVenn52/stockproof-solana/blob/main/docs/stockproof-passport.schema.json",
+  "title": "StockProof Passport",
+  "type": "object",
+  "required": [
+    "schemaName",
+    "schemaVersion",
+    "passportId",
+    "instrument",
+    "state",
+    "mode",
+    "scannedAt",
+    "checks",
+    "evidence"
+  ],
+  "properties": {
+    "schemaName": { "const": "stockproof.passport" },
+    "schemaVersion": { "const": "1.0.0" },
+    "passportId": { "type": "string", "minLength": 1 },
+    "instrument": {
+      "type": "object",
+      "required": ["symbol", "mintAddress", "network"],
+      "properties": {
+        "symbol": { "type": "string" },
+        "mintAddress": { "type": "string" },
+        "network": { "const": "Solana" }
+      },
+      "additionalProperties": true
+    },
+    "state": { "enum": ["PASS", "CAUTION", "BLOCKED", "UNVERIFIABLE"] },
+    "mode": { "enum": ["live", "snapshot"] },
+    "scannedAt": { "type": "string", "format": "date-time" },
+    "rpcSlot": { "type": ["integer", "null"], "minimum": 0 },
+    "reserveCoverage": { "type": ["number", "null"], "minimum": 0 },
+    "multiplier": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+    "paused": { "type": ["boolean", "null"] },
+    "checks": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "state", "result"],
+        "properties": {
+          "id": { "type": "string" },
+          "state": { "enum": ["pass", "caution", "fail", "unknown"] },
+          "result": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "state", "source", "endpoint", "retrievedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "state": { "enum": ["pass", "caution", "fail", "unknown"] },
+          "source": { "type": "string" },
+          "endpoint": { "type": "string" },
+          "retrievedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

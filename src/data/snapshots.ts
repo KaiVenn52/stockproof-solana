@@ -11,6 +11,9 @@ export function snapshotFor(symbol: string): Passport {
   const instrument = instruments.find((item) => item.symbol === symbol) ?? instruments[0]
   const scannedAt = '2026-09-14T08:00:00.000Z'
   return {
+    schemaName: 'stockproof.passport',
+    schemaVersion: '1.0.0',
+    passportId: `stockproof.passport:1.0.0:${instrument.symbol}:no-slot:${scannedAt}`,
     instrument,
     state: 'UNVERIFIABLE',
     mode: 'snapshot',
