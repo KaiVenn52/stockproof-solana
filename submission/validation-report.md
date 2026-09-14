@@ -1,19 +1,35 @@
 # Validation record
 
-Observed on 2026-09-14 from the local StockProof checkout.
+Observed on 2026-09-15 (Malaysia time) from the StockProof checkout and production deployment.
 
 Production: https://stockproof-solana.vercel.app
 
-- Unit tests: 8/8 passed.
-- ESLint: passed with zero errors.
-- Production build: passed.
-- Live integration probe: AAPLx, NVDAx, TSLAx, and QQQx all resolved to allowlisted Solana mints and confirmed Token-2022 accounts at current mainnet slots.
-- Browser QA: Chrome via Playwright at 1440×1000 and 390×844.
-- Interaction path: app load → live AAPLx passport → TSLAx passport → Surface → Method → mobile Passport.
-- Browser console: no application warnings or errors.
-- Layout: no document-level horizontal overflow at either viewport.
-- Production verification: site returned HTTP 200; TSLAx returned a live `PASS`, `spl-token-2022`, and a current confirmed slot.
+## Deterministic and contract tests
 
-The Browser plugin was not available in this session. The rendered QA path used Playwright with the installed Chrome executable.
+- Vitest: 15/15 passed across three test files.
+- Shared engine rejects zero, negative, missing, and non-finite reserve inputs.
+- Required issuer-to-mint and token-program failures produce `BLOCKED`, not `CAUTION`.
+- Route tests cover PASS, BLOCKED, UNVERIFIABLE, v1.0.0 output, invalid reserve inputs, and CORS preflight.
+- ESLint passed with zero errors.
+- Production TypeScript/Vite build passed.
+- npm audit reported zero vulnerabilities.
 
-Live API results are point-in-time observations and should be re-run before submission recording.
+## Live integration
+
+- Three production rounds covered AAPLx, NVDAx, TSLAx, and QQQx: 12/12 responses were live `stockproof.passport` v1.0.0 contracts.
+- Every response resolved to the allowlisted Solana mint, `spl-token-2022`, and a confirmed mainnet slot.
+- TSLAx returned PASS. AAPLx, NVDAx, and QQQx returned CAUTION because the issuer's upcoming corporate-action endpoint still contained past-effective Scheduled records.
+- Invalid API symbol returned HTTP 400.
+- Cross-origin OPTIONS returned HTTP 204 with `Access-Control-Allow-Origin: *`.
+- The exact local handler also passed the four-asset live integration probe against current xStocks and Solana sources.
+
+## Rendered product QA
+
+- Chrome via Playwright at 1440×1000, 390×844, and 768×1024.
+- Page identity, non-blank app shell, framework-overlay absence, console health, and document overflow checks passed.
+- Interaction path: live AAPLx → copy JSON → download JSON → validate exported schema → TSLAx → Surface consumer policy → Method.
+- Input validation path: unsupported question → natural-language NVDA resolution → provenance expansion.
+- Forced API failure produced `Snapshot mode`, `SNAPSHOT`, and `UNVERIFIABLE`; it did not retain the green live-evidence status.
+- Two Playwright suites passed. The only console network error in the failure suite was the deliberately aborted API request.
+
+The Browser plugin was unavailable, so rendered QA used Playwright with the installed Chrome executable. Live API results remain point-in-time observations and should be refreshed immediately before recording.
