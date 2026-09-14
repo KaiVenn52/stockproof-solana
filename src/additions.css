@@ -3,6 +3,23 @@
   gap: 0 34px;
 }
 
+.topbar nav button,
+.raw-link {
+  min-height: 40px;
+}
+
+.raw-link {
+  text-decoration: none;
+}
+
+.primary-facts strong,
+.secondary-facts strong,
+.watch-price,
+.check-result,
+.scan-meta time {
+  font-variant-numeric: tabular-nums;
+}
+
 .workbench > .instrument-bar {
   grid-column: 1;
   grid-row: 1;
