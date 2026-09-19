@@ -1,5 +1,7 @@
 # StockProof demo script — target 2:20
 
+Before recording: refresh the production page and wait for `LIVE · MAINNET`. Stop and retry if it says `SNAPSHOT` or `UNVERIFIABLE`. Select the assets once to confirm their current states; never narrate an old verdict as if it were live. The pitch-video allowance is three minutes, so keep this take under that limit. StockProof checks issuer-reported coverage, not independent custody.
+
 ## 0:00–0:18 — Hook
 
 Show the live Passport screen already loaded.
