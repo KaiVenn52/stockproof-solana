@@ -1,1 +1,1 @@
-export { derivePassportState, multiplierState, reserveCoverage, reserveState } from '../../shared/passport-engine.js'
+export { derivePassportState, displayedMintSupply, multiplierState, reserveCoverage, reserveEvidenceState, reserveState } from '../../shared/passport-engine.js'

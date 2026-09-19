@@ -25,7 +25,7 @@ It never predicts price direction, recommends a trade, or turns missing data int
 xStocks asset metadata ───────────────┐
 xStocks multiplier + corporate actions│
 xStocks proof of reserves ────────────┼─> deterministic checks ─> Stock Passport
-Solana getAccountInfo + getTokenSupply┘            │                 │
+Solana getAccountInfo ────────────────┘            │                 │
                                                    └─ evidence IDs ──┘
 ```
 
@@ -38,12 +38,15 @@ const response = await fetch('https://stockproof-solana.vercel.app/api/scan?symb
 if (!response.ok) throw new Error('Passport unavailable')
 
 const passport = await response.json()
-if (passport.schemaVersion !== '1.0.0' || passport.mode !== 'live' || passport.state !== 'PASS') {
+const ageMs = Date.now() - Date.parse(passport.scannedAt)
+if (passport.schemaVersion !== '1.0.0' || passport.mode !== 'live' || passport.state !== 'PASS' || !Number.isFinite(ageMs) || ageMs < -5 * 60_000 || ageMs > 5 * 60_000) {
   throw new Error(`Asset policy stopped: ${passport.state}`)
 }
 ```
 
 The API permits cross-origin `GET` requests and returns a `stockproof.passport` v1.0.0 object. See the [integration contract](docs/passport-integration.md) and [JSON Schema](docs/stockproof-passport.schema.json). The live UI can also copy or download the exact passport JSON.
+
+The Surface tab executes the same five-minute sample policy against the selected passport and visibly stops snapshots and non-PASS verdicts. It demonstrates integration behavior inside StockProof; it does not imply adoption by another protocol.
 
 ## Run locally
 
@@ -80,7 +83,7 @@ npm.cmd run live:verify
 - `scripts/validate-live.mjs` — reproducible live integration probe.
 - `submission/` — Stocklana-ready copy, demo script, and HTML submission artifact.
 
-Proof-of-reserves fields remain issuer-reported. StockProof verifies their internal relationship, timestamps, and agreement with chain state; it does not independently audit the offchain custodian. Total mint supply is displayed separately and is not mislabeled as circulation because issuer inventory and system wallets may be included.
+Proof-of-reserves fields remain issuer-reported. StockProof checks their internal coverage ratio and applies its own 72-hour freshness policy; it does not independently audit the offchain custodian or reconcile reported circulation against onchain supply. Mint supply is derived from the same parsed mint account used for the Token-2022 checks, then displayed separately because issuer inventory and system wallets may be included. Indicative price is optional: a slow price endpoint cannot prevent an integrity passport from being issued.
 
 ## Built for Stocklana
 

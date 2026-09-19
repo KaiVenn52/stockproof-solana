@@ -28,7 +28,7 @@ Expand `Reserve coverage`.
 
 Expand `Corporate-action schedule`.
 
-“AAPLx currently returns past-effective records that are still marked Scheduled in the upcoming feed. StockProof does not claim the action failed; it preserves the source inconsistency and downgrades the passport to CAUTION.”
+“If the issuer feed still contains past-effective records marked Scheduled, StockProof flags a source-quality warning. It does not claim the corporate action failed. The live verdict you see here comes from today's sources.”
 
 ## 1:38–1:58 — Onchain proof
 
@@ -40,7 +40,7 @@ Open the Solana mint evidence and click `Open Solana Explorer`.
 
 Return, select TSLAx, then click `Download`.
 
-“Switching assets runs the entire graph again. TSLAx currently clears the required checks, so it receives PASS. The result is not trapped in this dashboard: this is a versioned JSON passport another app can enforce.”
+“Switching assets runs the entire graph again. This result is not trapped in the dashboard: the versioned JSON passport lets another app enforce its own policy. I will only call it PASS if the live screen actually says PASS.”
 
 ## 2:12–2:20 — Close
 

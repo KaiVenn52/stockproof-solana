@@ -11,7 +11,7 @@ import { runScan } from './services/scan'
 import type { Passport } from './types'
 
 type View = 'live' | 'coverage' | 'methodology'
-const completionNote = (result: Passport) => `${result.mode === 'live' ? 'Live passport issued' : 'Fixture loaded'} · ${result.state}`
+const completionNote = (result: Passport) => `${result.mode === 'live' ? 'Live passport issued' : 'Live scan unavailable; frozen fixture only'} · ${result.state}`
 
 export default function App() {
   const [view, setView] = useState<View>('live')
@@ -83,7 +83,7 @@ export default function App() {
         <PassportPanel passport={passport} />
         <EvidenceInspector key={`${passport.instrument.symbol}-${passport.scannedAt}`} passport={passport} />
       </section>
-    </main> : view === 'coverage' ? <ReplayLab /> : <Methodology />}
+    </main> : view === 'coverage' ? <ReplayLab passport={passport} /> : <Methodology />}
     <footer><div><b>StockProof</b><span>Preflight infrastructure for tokenized equities.</span></div><div>Issuer-bound · Onchain-verified · Composable</div><div>Research infrastructure. Not investment advice.</div></footer>
   </div>
 }

@@ -5,7 +5,7 @@ const REQUIRED_CHECKS = ['identity', 'token-program', 'multiplier', 'reserves']
 
 export const finiteNumber = (value) => {
   if (value === null || value === undefined || value === '') return null
-  const parsed = Number.parseFloat(String(value))
+  const parsed = Number(String(value))
   return Number.isFinite(parsed) ? parsed : null
 }
 
@@ -24,6 +24,23 @@ export const reserveState = (coverage) => {
   return 'fail'
 }
 
+export const reserveEvidenceState = (coverage, timestamp, nowMs = Date.now()) => {
+  const coverageState = reserveState(coverage)
+  if (coverageState === 'fail' || coverageState === 'unknown') return coverageState
+  const observedMs = Date.parse(timestamp)
+  if (!Number.isFinite(observedMs) || observedMs > nowMs + 5 * 60_000) return 'unknown'
+  if (nowMs - observedMs > 72 * 60 * 60_000) return 'caution'
+  return coverageState
+}
+
+export const displayedMintSupply = (rawSupply, decimals, multiplier) => {
+  if (!/^\d+$/.test(String(rawSupply)) || !Number.isInteger(decimals) || decimals < 0 || decimals > 18 || !Number.isFinite(multiplier) || multiplier <= 0) return null
+  const raw = Number(rawSupply)
+  if (!Number.isSafeInteger(raw)) return null
+  const value = raw / 10 ** decimals * multiplier
+  return Number.isFinite(value) ? value : null
+}
+
 export const multiplierState = (issuer, onchain) => {
   if (!Number.isFinite(issuer) || !Number.isFinite(onchain) || issuer <= 0 || onchain <= 0) return 'unknown'
   const delta = Math.abs(issuer - onchain)
@@ -34,8 +51,8 @@ export const multiplierState = (issuer, onchain) => {
 
 export const derivePassportState = (checks) => {
   const required = REQUIRED_CHECKS.map((id) => checks.find((check) => check.id === id))
+  if (required.some((check) => check?.state === 'fail') || checks.some((check) => check.state === 'fail')) return 'BLOCKED'
   if (required.some((check) => !check || check.state === 'unknown')) return 'UNVERIFIABLE'
-  if (required.some((check) => check.state === 'fail') || checks.some((check) => check.state === 'fail')) return 'BLOCKED'
   if (checks.some((check) => check.state === 'caution')) return 'CAUTION'
   return 'PASS'
 }

@@ -30,6 +30,6 @@ StockProof now exposes a cross-origin `stockproof.passport` v1.0.0 JSON contract
 
 ## Honest limitations
 
-- Proof-of-reserves is issuer-reported; StockProof verifies internal coverage, freshness, and chain agreement, not the custodian itself.
+- Proof-of-reserves is issuer-reported. StockProof checks the internal coverage ratio and applies a 72-hour freshness policy; it does not independently audit custody or reconcile reported circulation against onchain supply.
 - The prototype is read-only and does not execute trades.
 - Legal availability varies by jurisdiction.

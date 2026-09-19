@@ -23,7 +23,8 @@ if (passport.schemaVersion !== '1.0.0') {
   throw new Error('Unsupported passport schema')
 }
 
-if (passport.mode !== 'live' || passport.state !== 'PASS') {
+const ageMs = Date.now() - Date.parse(passport.scannedAt)
+if (passport.mode !== 'live' || passport.state !== 'PASS' || !Number.isFinite(ageMs) || ageMs < -5 * 60_000 || ageMs > 5 * 60_000) {
   throw new Error(`Asset policy stopped: ${passport.state}`)
 }
 
@@ -32,5 +33,7 @@ displayTokenizedEquity(passport.instrument)
 ```
 
 `CAUTION` is not equivalent to `PASS`; the consuming product decides whether the visible warning is acceptable. `BLOCKED` means a required integrity check failed. `UNVERIFIABLE` means a required evidence layer was missing or invalid. A snapshot never represents current chain evidence.
+
+The Surface page executes this five-minute sample policy against the currently selected passport. It is a working consumer example within StockProof, not a claim that an external protocol has integrated the API.
 
 The API is deterministic and does not provide a price prediction, trading signal, or independent custodian audit.

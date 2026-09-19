@@ -39,4 +39,6 @@
 @media(max-width:1050px){.passport-actions{grid-column:1/-1}}
 @media(max-width:720px){.passport-actions{flex-wrap:wrap}.passport-actions>span{width:100%;margin-left:0}}
 .integration-example{display:grid;grid-template-columns:.8fr 1.2fr;gap:34px;align-items:center;margin-top:20px;padding:30px}.integration-example h2{margin:10px 0 8px;font-size:22px}.integration-example p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.integration-example pre{overflow:auto;margin:0;padding:20px;border-radius:13px;background:var(--ink);color:#c6d7ff;font:11px/1.6 var(--mono)}
+.consumer-decision{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:20px;padding:26px 30px;border-left:4px solid var(--amber)}.consumer-decision.decision-allow{border-left-color:var(--mint)}.consumer-decision h2{margin:8px 0 6px;font:600 27px var(--mono)}.consumer-decision p{margin:0;color:var(--muted);font-size:12px}.consumer-decision dl{display:flex;gap:28px;margin:0}.consumer-decision dt{color:var(--muted);font-size:10px}.consumer-decision dd{margin:5px 0 0;font:600 12px var(--mono)}
 @media(max-width:720px){.integration-example{grid-template-columns:1fr;padding:22px}}
+@media(max-width:720px){.consumer-decision{display:block;padding:22px}.consumer-decision dl{flex-wrap:wrap;gap:16px;margin-top:22px}}
