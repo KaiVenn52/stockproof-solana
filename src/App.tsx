@@ -17,7 +17,7 @@ export default function App() {
   const [view, setView] = useState<View>('live')
   const [symbol, setSymbol] = useState('AAPLx')
   const [passport, setPassport] = useState<Passport>(() => snapshotFor('AAPLx'))
-  const [liveQuotes, setLiveQuotes] = useState<Record<string, Passport['instrument']>>({})
+  const [assetStates, setAssetStates] = useState<Record<string, Passport['state']>>({})
   const [scanning, setScanning] = useState(true)
   const [researchQuestion, setResearchQuestion] = useState('Verify AAPLx before my app uses it')
   const [queryNote, setQueryNote] = useState('Ask about NVDA, AAPL, TSLA, or QQQ.')
@@ -31,7 +31,7 @@ export default function App() {
     if (requestId !== scanRequest.current) return
     startTransition(() => {
       setPassport(result)
-      if (result.mode === 'live') setLiveQuotes((current) => ({ ...current, [result.instrument.symbol]: result.instrument }))
+      setAssetStates((current) => ({ ...current, [result.instrument.symbol]: result.state }))
       setQueryNote(completionNote(result))
       setScanning(false)
     })
@@ -44,7 +44,7 @@ export default function App() {
       if (!active || requestId !== scanRequest.current) return
       startTransition(() => {
         setPassport(result)
-        if (result.mode === 'live') setLiveQuotes({ [result.instrument.symbol]: result.instrument })
+        setAssetStates({ [result.instrument.symbol]: result.state })
         setQueryNote(completionNote(result))
         setScanning(false)
       })
@@ -77,7 +77,7 @@ export default function App() {
         <div className="hero-heading"><span className="eyebrow"><ScanLine size={14} /> Tokenized equity preflight</span><h1>Don’t trust the ticker.<br /><em>Verify the asset.</em></h1><p>One passport cross-checks issuer identity, Token-2022 state, corporate-action multipliers, transfer controls, and reported reserves.</p></div>
         <form className="research-bar" onSubmit={submitResearchQuestion}><label htmlFor="research-question">Asset question</label><div className="question-control"><input id="research-question" type="search" value={researchQuestion} onChange={(event) => setResearchQuestion(event.target.value)} autoComplete="off" spellCheck={false} aria-describedby="query-note" /><button type="submit" disabled={scanning} aria-busy={scanning}>{scanning ? <RefreshCw className="spin" size={18} /> : <ArrowRight size={18} />}<span>{scanning ? 'Verifying' : 'Issue passport'}</span></button></div><small id="query-note" aria-live="polite">{queryNote}</small></form>
       </section>
-      <Watchlist selected={symbol} liveQuotes={liveQuotes} onSelect={selectSymbol} />
+      <Watchlist selected={symbol} assetStates={assetStates} onSelect={selectSymbol} />
       <section className="workbench">
         <div className="instrument-bar"><div><span>Current passport</span><h2>{passport.instrument.symbol}</h2><p>{passport.instrument.company} · {passport.instrument.network}</p></div><button className="scan-button" disabled={scanning} onClick={() => void scan(symbol, passport.researchQuestion ?? researchQuestion)}>{scanning ? <RefreshCw className="spin" size={16} /> : <ScanLine size={16} />}<span>{scanning ? 'Reading sources' : 'Refresh passport'}</span></button></div>
         <PassportPanel passport={passport} />

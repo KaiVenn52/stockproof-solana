@@ -1,10 +1,10 @@
 import type { MarketInstrument, Passport } from '../types'
 
 export const instruments: MarketInstrument[] = [
-  { symbol: 'NVDAx', underlyingSymbol: 'NVDA', company: 'NVIDIA xStock', tokenPrice: 213.63, mintAddress: 'Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh', network: 'Solana' },
-  { symbol: 'AAPLx', underlyingSymbol: 'AAPL', company: 'Apple xStock', tokenPrice: 329.895, mintAddress: 'XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp', network: 'Solana' },
-  { symbol: 'TSLAx', underlyingSymbol: 'TSLA', company: 'Tesla xStock', tokenPrice: 359.87, mintAddress: 'XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB', network: 'Solana' },
-  { symbol: 'QQQx', underlyingSymbol: 'QQQ', company: 'Nasdaq xStock', tokenPrice: 703.55, mintAddress: 'Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ', network: 'Solana' },
+  { symbol: 'NVDAx', underlyingSymbol: 'NVDA', company: 'NVIDIA xStock', tokenPrice: null, mintAddress: 'Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh', network: 'Solana' },
+  { symbol: 'AAPLx', underlyingSymbol: 'AAPL', company: 'Apple xStock', tokenPrice: null, mintAddress: 'XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp', network: 'Solana' },
+  { symbol: 'TSLAx', underlyingSymbol: 'TSLA', company: 'Tesla xStock', tokenPrice: null, mintAddress: 'XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB', network: 'Solana' },
+  { symbol: 'QQQx', underlyingSymbol: 'QQQ', company: 'Nasdaq xStock', tokenPrice: null, mintAddress: 'Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ', network: 'Solana' },
 ]
 
 export function snapshotFor(symbol: string): Passport {

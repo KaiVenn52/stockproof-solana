@@ -3,7 +3,7 @@ import { evaluateConsumerPolicy } from '../lib/consumer-policy'
 import type { Passport } from '../types'
 
 const surfaces = [
-  ['Issuer identity', 'Ticker, ISIN, underlying, Solana deployment'],
+  ['Issuer identity', 'Ticker, underlying, allowlisted Solana deployment'],
   ['Token-2022', 'Program owner, decimals, Scaled UI, pause state'],
   ['Backing', 'Shares held, circulation, proof timestamp'],
   ['Corporate actions', 'Multiplier agreement and schedule hygiene'],

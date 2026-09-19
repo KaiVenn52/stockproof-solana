@@ -58,8 +58,7 @@ export default async function handler(req, res) {
     const deployment = asset.deployments?.find((item) => item.network === 'Solana')
     const mint = deployment?.address
     if (!mint) throw new Error('Issuer returned no Solana deployment')
-    const [price, multiplier, reserves, corporate, account] = await Promise.all([
-      json(`${XSTOCKS_BASE}/public/assets/${encoded}/price-data`, AbortSignal.timeout(1_500)).catch(() => ({ quote: null })),
+    const [multiplier, reserves, corporate, account] = await Promise.all([
       json(`${XSTOCKS_BASE}/public/assets/${encoded}/multiplier?network=Solana`, controller.signal),
       json(`${XSTOCKS_BASE}/public/proof-of-reserves/${encoded}`, controller.signal),
       json(`${XSTOCKS_BASE}/public/corporate-actions/upcoming?symbol=${encoded}&pageSize=100`, controller.signal),
@@ -120,7 +119,7 @@ export default async function handler(req, res) {
       schemaName: PASSPORT_SCHEMA_NAME,
       schemaVersion: PASSPORT_SCHEMA_VERSION,
       passportId: passportId(symbol, account.context.slot, scannedAt),
-      instrument: { symbol, underlyingSymbol: asset.underlying?.symbol || asset.underlyingSymbol, company: asset.name || meta.company, tokenPrice: price.quote ?? null, mintAddress: mint, logo: asset.logo, network: 'Solana' },
+      instrument: { symbol, underlyingSymbol: asset.underlying?.symbol || asset.underlyingSymbol, company: asset.name || meta.company, tokenPrice: null, mintAddress: mint, logo: asset.logo, network: 'Solana' },
       state,
       mode: 'live',
       scannedAt,

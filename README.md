@@ -83,7 +83,7 @@ npm.cmd run live:verify
 - `scripts/validate-live.mjs` — reproducible live integration probe.
 - `submission/` — Stocklana-ready copy, demo script, and HTML submission artifact.
 
-Proof-of-reserves fields remain issuer-reported. StockProof checks their internal coverage ratio and applies its own 72-hour freshness policy; it does not independently audit the offchain custodian or reconcile reported circulation against onchain supply. Mint supply is derived from the same parsed mint account used for the Token-2022 checks, then displayed separately because issuer inventory and system wallets may be included. Indicative price is optional: a slow price endpoint cannot prevent an integrity passport from being issued.
+Proof-of-reserves fields remain issuer-reported. StockProof checks their internal coverage ratio and applies its own 72-hour freshness policy; it does not independently audit the offchain custodian or reconcile reported circulation against onchain supply. Mint supply is derived from the same parsed mint account used for the Token-2022 checks, then displayed separately because issuer inventory and system wallets may be included. Price is deliberately excluded from the preflight verdict and is not queried by this route.
 
 ## Built for Stocklana
 

@@ -6,10 +6,10 @@ const TOKEN_2022_PROGRAM = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
 
 const ok = (payload) => Promise.resolve({ ok: true, json: async () => payload })
 
-const responses = ({ mint = EXPECTED_MINT, owner = TOKEN_2022_PROGRAM, circulatingSupply = '100', reserveTimestamp = new Date().toISOString(), priceFails = false, initialized = true } = {}) =>
+const responses = ({ mint = EXPECTED_MINT, owner = TOKEN_2022_PROGRAM, circulatingSupply = '100', reserveTimestamp = new Date().toISOString(), initialized = true } = {}) =>
   vi.fn((url, options = {}) => {
     const target = String(url)
-    if (target.includes('/public/assets/AAPLx/price-data')) return priceFails ? Promise.reject(new Error('price unavailable')) : ok({ quote: 123.45 })
+    if (target.includes('/public/assets/AAPLx/price-data')) throw new Error('Price is outside the integrity scan')
     if (target.includes('/public/assets/AAPLx/multiplier')) return ok({ currentMultiplier: '1' })
     if (target.includes('/public/proof-of-reserves/AAPLx')) return ok({ sharesHeld: '100', circulatingSupply, timestamp: reserveTimestamp })
     if (target.includes('/public/corporate-actions/upcoming')) return ok({ nodes: [] })
@@ -75,8 +75,8 @@ describe('live passport API contract', () => {
     expect(response.body.state).toBe('BLOCKED')
   })
 
-  it('issues a passport when optional price data fails', async () => {
-    const fetchMock = responses({ priceFails: true })
+  it('does not query price or a redundant supply RPC', async () => {
+    const fetchMock = responses()
     vi.stubGlobal('fetch', fetchMock)
     const response = await invoke()
     expect(response.statusCode).toBe(200)
