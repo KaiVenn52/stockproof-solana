@@ -1,5 +1,5 @@
 import { ASSETS } from '../../shared/assets.js'
-import type { MarketInstrument, Passport } from '../types'
+import type { MarketInstrument, Passport } from '../types.js'
 
 // Derived from the shared registry so the interface can never display a mint
 // that the evidence engine would reject.
