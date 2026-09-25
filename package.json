@@ -9,27 +9,31 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
-    "live:verify": "node scripts/validate-live.mjs"
+    "live:verify": "node scripts/validate-live.mjs",
+    "verify:schema": "node scripts/verify-schema.mjs",
+    "verify:rendered": "node scripts/verify-rendered.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "lucide-react": "0.468.0",
-    "react": "latest",
-    "react-dom": "latest",
-    "vite": "latest"
+    "@vitejs/plugin-react": "^6.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "vite": "^8.2.2"
   },
   "devDependencies": {
-    "@eslint/js": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "eslint-plugin-react-hooks": "latest",
-    "eslint-plugin-react-refresh": "latest",
-    "globals": "latest",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
     "playwright": "^1.63.0",
-    "typescript": "latest",
-    "typescript-eslint": "latest",
-    "vitest": "latest"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^5.0.0"
   }
 }

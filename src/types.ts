@@ -12,6 +12,14 @@ export interface MarketInstrument {
   network: 'Solana'
 }
 
+// What the audit surface remembers about an asset it has already visited. The
+// mode is kept alongside the verdict so a frozen fixture can never be presented
+// as an issued passport.
+export interface AssetStateEntry {
+  state: PassportState
+  mode: DataMode
+}
+
 export interface IntegrityCheck {
   id: string
   title: string

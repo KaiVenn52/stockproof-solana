@@ -32,11 +32,23 @@ describe('stock passport integrity engine', () => {
     expect(multiplierState(1.004, 1.003)).toBe('fail')
   })
   it('abstains when a required layer is unavailable', () => {
-    const checks = [check('identity', 'pass'), check('token-program', 'unknown'), check('multiplier', 'pass'), check('reserves', 'pass')]
+    const checks = [check('identity', 'pass'), check('token-program', 'unknown'), check('multiplier', 'pass'), check('reserves', 'pass'), check('controls', 'pass')]
+    expect(derivePassportState(checks)).toBe('UNVERIFIABLE')
+  })
+  it('treats unreadable transfer controls as missing evidence, not a clean pass', () => {
+    const checks = [check('identity', 'pass'), check('token-program', 'pass'), check('multiplier', 'pass'), check('reserves', 'pass'), check('controls', 'unknown')]
+    expect(derivePassportState(checks)).toBe('UNVERIFIABLE')
+  })
+  it('abstains when the transfer-control layer is absent entirely', () => {
+    const checks = [check('identity', 'pass'), check('token-program', 'pass'), check('multiplier', 'pass'), check('reserves', 'pass')]
     expect(derivePassportState(checks)).toBe('UNVERIFIABLE')
   })
   it('surfaces warnings without pretending the passport failed', () => {
-    const checks = [check('identity', 'pass'), check('token-program', 'pass'), check('multiplier', 'pass'), check('reserves', 'pass'), check('corporate-actions', 'caution')]
+    const checks = [check('identity', 'pass'), check('token-program', 'pass'), check('multiplier', 'pass'), check('reserves', 'pass'), check('controls', 'pass'), check('corporate-actions', 'caution')]
+    expect(derivePassportState(checks)).toBe('CAUTION')
+  })
+  it('cautions on a paused mint', () => {
+    const checks = [check('identity', 'pass'), check('token-program', 'pass'), check('multiplier', 'pass'), check('reserves', 'pass'), check('controls', 'caution')]
     expect(derivePassportState(checks)).toBe('CAUTION')
   })
   it('blocks when a required integrity check fails', () => {

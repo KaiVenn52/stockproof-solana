@@ -1,7 +1,11 @@
 export const PASSPORT_SCHEMA_NAME = 'stockproof.passport'
 export const PASSPORT_SCHEMA_VERSION = '1.0.0'
 
-const REQUIRED_CHECKS = ['identity', 'token-program', 'multiplier', 'reserves']
+// An asset is only passportable when StockProof can read the evidence that
+// decides whether a downstream app may safely accept it. Transfer controls are
+// in that set: "transfers can be frozen and we could not tell" is not a clean
+// conclusion, so an unreadable pause extension abstains rather than passing.
+const REQUIRED_CHECKS = ['identity', 'token-program', 'multiplier', 'reserves', 'controls']
 
 export const finiteNumber = (value) => {
   if (value === null || value === undefined || value === '') return null

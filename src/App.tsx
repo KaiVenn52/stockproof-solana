@@ -5,10 +5,10 @@ import { Methodology } from './components/Methodology'
 import { PassportPanel } from './components/PassportPanel'
 import { ReplayLab } from './components/ReplayLab'
 import { Watchlist } from './components/Watchlist'
-import { snapshotFor } from './data/snapshots'
-import { resolveInstrument } from './lib/query'
+import { snapshotFor, instruments } from './data/snapshots'
+import { resolveInstrumentMatches } from './lib/query'
 import { runScan } from './services/scan'
-import type { Passport } from './types'
+import type { AssetStateEntry, Passport } from './types'
 
 type View = 'live' | 'coverage' | 'methodology'
 const completionNote = (result: Passport) => `${result.mode === 'live' ? 'Live passport issued' : 'Live scan unavailable; frozen fixture only'} · ${result.state}`
@@ -17,10 +17,10 @@ export default function App() {
   const [view, setView] = useState<View>('live')
   const [symbol, setSymbol] = useState('AAPLx')
   const [passport, setPassport] = useState<Passport>(() => snapshotFor('AAPLx'))
-  const [assetStates, setAssetStates] = useState<Record<string, Passport['state']>>({})
+  const [assetStates, setAssetStates] = useState<Record<string, AssetStateEntry>>({})
   const [scanning, setScanning] = useState(true)
   const [researchQuestion, setResearchQuestion] = useState('Verify AAPLx before my app uses it')
-  const [queryNote, setQueryNote] = useState('Ask about NVDA, AAPL, TSLA, or QQQ.')
+  const [queryNote, setQueryNote] = useState(`Ask about any of the ${instruments.length} pinned xStocks — NVDA, AAPL, TSLA, GOOGL, GLD.`)
   const scanRequest = useRef(0)
 
   const scan = useCallback(async (nextSymbol: string, question = `Verify ${nextSymbol} on Solana`) => {
@@ -31,7 +31,7 @@ export default function App() {
     if (requestId !== scanRequest.current) return
     startTransition(() => {
       setPassport(result)
-      setAssetStates((current) => ({ ...current, [result.instrument.symbol]: result.state }))
+      setAssetStates((current) => ({ ...current, [result.instrument.symbol]: { state: result.state, mode: result.mode } }))
       setQueryNote(completionNote(result))
       setScanning(false)
     })
@@ -44,7 +44,7 @@ export default function App() {
       if (!active || requestId !== scanRequest.current) return
       startTransition(() => {
         setPassport(result)
-        setAssetStates({ [result.instrument.symbol]: result.state })
+        setAssetStates({ [result.instrument.symbol]: { state: result.state, mode: result.mode } })
         setQueryNote(completionNote(result))
         setScanning(false)
       })
@@ -61,13 +61,17 @@ export default function App() {
 
   const submitResearchQuestion = (event: FormEvent) => {
     event.preventDefault()
-    const nextSymbol = resolveInstrument(researchQuestion)
-    if (!nextSymbol) {
-      setQueryNote('Unsupported asset. Try NVDA, AAPL, TSLA, or QQQ.')
+    const matches = resolveInstrumentMatches(researchQuestion)
+    if (!matches.length) {
+      setQueryNote(`Not in the pinned allowlist. StockProof pins ${instruments.length} xStocks — try NVDA, AAPL, TSLA, GOOGL, or GLD.`)
       return
     }
-    setSymbol(nextSymbol)
-    void scan(nextSymbol, researchQuestion)
+    if (matches.length > 1) {
+      setQueryNote(`That question names ${matches.length} pinned assets (${matches.join(', ')}). Pick one in the audit surface.`)
+      return
+    }
+    setSymbol(matches[0])
+    void scan(matches[0], researchQuestion)
   }
 
   return <div className="app-shell">

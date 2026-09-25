@@ -1,11 +1,16 @@
+import { ASSETS } from '../../shared/assets.js'
 import type { MarketInstrument, Passport } from '../types'
 
-export const instruments: MarketInstrument[] = [
-  { symbol: 'NVDAx', underlyingSymbol: 'NVDA', company: 'NVIDIA xStock', tokenPrice: null, mintAddress: 'Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh', network: 'Solana' },
-  { symbol: 'AAPLx', underlyingSymbol: 'AAPL', company: 'Apple xStock', tokenPrice: null, mintAddress: 'XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp', network: 'Solana' },
-  { symbol: 'TSLAx', underlyingSymbol: 'TSLA', company: 'Tesla xStock', tokenPrice: null, mintAddress: 'XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB', network: 'Solana' },
-  { symbol: 'QQQx', underlyingSymbol: 'QQQ', company: 'Nasdaq xStock', tokenPrice: null, mintAddress: 'Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ', network: 'Solana' },
-]
+// Derived from the shared registry so the interface can never display a mint
+// that the evidence engine would reject.
+export const instruments: MarketInstrument[] = ASSETS.map((asset) => ({
+  symbol: asset.symbol,
+  underlyingSymbol: asset.underlyingSymbol,
+  company: asset.company,
+  tokenPrice: null,
+  mintAddress: asset.mint,
+  network: 'Solana',
+}))
 
 export function snapshotFor(symbol: string): Passport {
   const instrument = instruments.find((item) => item.symbol === symbol) ?? instruments[0]
