@@ -10,6 +10,8 @@
     "test": "vitest run",
     "lint": "eslint .",
     "live:verify": "node scripts/validate-live.mjs",
+    "solami:verify": "node --env-file=.env.local scripts/verify-solami.mjs",
+    "solami:watch": "node --env-file=.env.local scripts/watch-solami.mjs",
     "verify:schema": "node scripts/verify-schema.mjs",
     "verify:rendered": "node scripts/verify-rendered.mjs"
   },

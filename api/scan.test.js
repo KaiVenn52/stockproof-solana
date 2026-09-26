@@ -28,7 +28,7 @@ const invoke = async (method = 'GET', query = { symbol: 'AAPLx' }) => {
   return response
 }
 
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs() })
 
 describe('live passport API contract', () => {
   it('returns a versioned PASS passport for valid evidence', async () => {
@@ -177,6 +177,29 @@ describe('passport request boundary', () => {
 })
 
 describe('solana rpc resilience', () => {
+  it('uses Solami as the sole chain source when configured', async () => {
+    vi.stubEnv('SOLAMI_API_KEY', 'test-only-key')
+    const fetchMock = responses()
+    vi.stubGlobal('fetch', fetchMock)
+    const response = await invoke()
+    expect(response.statusCode).toBe(200)
+    const chainCalls = fetchMock.mock.calls.filter(([, options]) => options?.method === 'POST')
+    expect(chainCalls).toHaveLength(1)
+    expect(new URL(chainCalls[0][0]).host).toBe('rpc.solami.dev')
+    expect(response.body.evidence.find((item) => item.id === 'chain').source).toContain('rpc.solami.dev')
+    expect(JSON.stringify(response.body)).not.toContain('test-only-key')
+  })
+
+  it('does not disguise a Solami outage as a public-RPC passport', async () => {
+    vi.stubEnv('SOLAMI_API_KEY', 'test-only-key')
+    const base = responses()
+    const fetchMock = vi.fn((url, options = {}) => options.method === 'POST' ? Promise.reject(new Error('provider unavailable')) : base(url, options))
+    vi.stubGlobal('fetch', fetchMock)
+    const response = await invoke()
+    expect(response.statusCode).toBe(503)
+    expect(fetchMock.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1)
+  })
+
   it('fails over to the next endpoint and records which host answered', async () => {
     vi.stubEnv('SOLANA_RPC_URL', '')
     const base = responses()

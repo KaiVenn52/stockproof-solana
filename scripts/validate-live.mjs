@@ -34,6 +34,9 @@ for (const symbol of supportedSymbols) {
   assert.ok(passport.checks.find((c) => c.id === 'identity')?.state === 'pass', `${symbol}: identity`)
   assert.ok(passport.checks.find((c) => c.id === 'token-program')?.state === 'pass', `${symbol}: token-program`)
   assert.ok(passport.evidence.some((item) => item.source.startsWith('Solana mainnet RPC')), `${symbol}: chain evidence`)
+  if (process.env.SOLAMI_API_KEY?.trim()) {
+    assert.ok(passport.evidence.some((item) => item.source.includes('rpc.solami.dev')), `${symbol}: Solami data path`)
+  }
   assert.ok(Number.isFinite(passport.reserveCoverage) && passport.reserveCoverage >= 0, `${symbol}: reserveCoverage`)
 
   const noteworthy = passport.checks.filter((c) => c.state !== 'pass')

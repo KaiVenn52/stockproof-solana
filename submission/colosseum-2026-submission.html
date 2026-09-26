@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StockProof — Crypto World's Fair submission draft</title>
+  <style>
+    body{font:16px/1.55 system-ui,sans-serif;max-width:850px;margin:0 auto;padding:32px 20px;color:#17202b;background:#fff}
+    h1,h2{line-height:1.2}h2{margin-top:2rem;border-bottom:1px solid #ccd4dc;padding-bottom:.4rem}
+    a{color:#185cb0}code{background:#edf1f5;padding:.1rem .3rem;border-radius:3px}
+    .status{border-left:4px solid #a55b00;background:#fff5e7;padding:12px 16px}
+    .script{border-left:3px solid #8aa0b5;padding-left:16px}li{margin:.4rem 0}
+  </style>
+</head>
+<body>
+  <h1>StockProof</h1>
+  <p>A preflight integrity layer for tokenized equities on Solana.</p>
+  <p><a href="https://stockproof-solana.vercel.app">Live product</a> · <a href="https://github.com/KaiVenn52/stockproof-solana">Public source</a></p>
+  <p class="status"><strong>Draft, not submitted.</strong> This package is for the Colosseum Crypto World's Fair (September 14–October 12, 2026). Presentation and demo recordings, team/profile details, and portal submission are still required. Solami RPC is deployed and verified on the public production API; the Solami WebSocket watcher is verified locally but not hosted as an always-on service or recorded. This page does not claim a completed Solami side-track entry or eligibility for the Kazakhstan KASE track.</p>
+
+  <h2>One-line pitch</h2>
+  <p>Before a wallet, lending market, index product, or agent trusts a tokenized stock, StockProof checks the issuer-to-mint identity and live Token-2022 state and returns a provenance-rich, machine-readable passport.</p>
+
+  <h2>Problem and insight</h2>
+  <p>Tokenized-equity interfaces often show a ticker and price while hiding the state that determines whether an asset is safe to consume. The ticker can resolve to a changed mint, the Scaled UI multiplier can change displayed balances after a corporate action, and transfers can be paused. A price feed cannot answer those questions. NFLXx is the concrete example: its effective onchain Scaled UI multiplier currently reads 10.0, so displaying a raw amount as a user balance can be wrong by a factor of ten.</p>
+
+  <h2>Product and why Solana</h2>
+  <p>StockProof pins 20 reviewed xStocks mints and reconciles each with official issuer metadata, proof-of-reserves reports, corporate-action records, and the live Solana Token-2022 mint account. The output is a versioned JSON passport with checks, exact evidence sources, RPC slot, capture time, and one of four states: PASS, CAUTION, BLOCKED, or UNVERIFIABLE. The Solana account is the verification boundary: without its extensions and pause state, the product cannot issue the same conclusion. It is read-only and does not execute trades.</p>
+
+  <h2>User, distribution, and business hypothesis</h2>
+  <p>The initial user is a developer integrating tokenized equities into a wallet, collateral system, index product, or autonomous agent. The first distribution wedge is the public passport API and JSON Schema: a developer can reject stale or non-PASS evidence before accepting a mint. A plausible future business is a managed monitoring/API tier with change alerts and coverage expansion. This is a hypothesis, not validated revenue or adoption. No third-party protocol integration, paying customer, or usage metric is claimed.</p>
+
+  <h2>What was built in the hackathon window</h2>
+  <p>Use the repository's dated Git history as the source of truth. The StockProof Solana checkout and its live passport implementation were developed during the September 14–October 12, 2026 window. The initial idea and any reused pre-existing source, designs, or assets must be disclosed in the Colosseum form; do not describe the entire codebase as new without checking commit history. The product was also prepared for a separate Stocklana opportunity. This is the same product, not evidence of two Colosseum submissions.</p>
+
+  <h2>Current verification</h2>
+  <p>On September 27, 2026, local checks passed: 68 automated tests, TypeScript/Vite production build, and a live Solami RPC mainnet scan of all 20 pinned assets. That scan returned 9 PASS and 11 CAUTION, with no BLOCKED or UNVERIFIABLE result. All 11 cautions came from the issuer's corporate-action schedule feed. A separate Solami WebSocket run established 20 mint subscriptions and observed advancing confirmed slots, but no mint state changes occurred during the short run. The public production API returned a live TSLAx passport sourced from rpc.solami.dev. These are point-in-time observations, not an uptime or future-verdict guarantee. Re-run the checks immediately before recording and submitting.</p>
+
+  <h2>2–3 minute presentation script</h2>
+  <div class="script">
+    <p>Tokenized stocks are becoming composable, but most apps still treat a ticker and a price as enough. They are not. A wrong mint, a balance multiplier changed by a split, or a paused token can break a wallet or collateral system before a price chart notices.</p>
+    <p>StockProof is a preflight integrity layer. Pick a tokenized stock and it issues one inspectable passport: PASS, CAUTION, BLOCKED, or UNVERIFIABLE. The passport combines official xStocks records with the live Solana Token-2022 mint. It keeps the slot, source, capture time, and the exact checks that produced the verdict.</p>
+    <p>The insight is visible in NFLXx: its effective onchain Scaled UI multiplier is ten. An app displaying the raw amount as the user-visible balance can be wrong by ten times. We read the mint extension, select the effective multiplier by timestamp, and compare it with issuer metadata. If required evidence is missing, StockProof abstains. If identity or program checks fail, it blocks.</p>
+    <p>Our first users are developers who need to decide whether a tokenized equity is acceptable input for a wallet, lending market, index, or agent. The API and schema make the result usable by another application. We have not claimed external integration or revenue. The next step is to interview integrators, observe which checks they actually need, and expand coverage only where we can maintain a reviewed mint registry.</p>
+    <p>This is a working, read-only mainnet prototype, not a trading product and not an independent custody audit. Our aim is simple: make the invisible asset state visible before composability turns a bad assumption into a user loss.</p>
+  </div>
+
+  <h2>Product-demo script (maximum 3 minutes)</h2>
+  <ol>
+    <li>Open the production site and show <code>LIVE · MAINNET</code>. If it says snapshot or unverifiable, stop and recheck rather than recording a false live demo.</li>
+    <li>Select NFLXx. Expand the multiplier check and show issuer and onchain values. Confirm the current live value before speaking; never narrate a cached result.</li>
+    <li>Open mint evidence and follow the Explorer link. Point to the confirmed slot and source endpoint, then return to the app.</li>
+    <li>Select one currently clean PASS asset and one currently CAUTION asset. Explain the actual check driving the difference without implying a failed corporate action.</li>
+    <li>Download the passport JSON and show the internal Surface sample consumer stopping a stale or non-PASS result. State that Surface is an internal example, not a third-party adoption claim.</li>
+  </ol>
+
+  <h2>Submission gate</h2>
+  <ul>
+    <li>Confirm the Colosseum profile base country, team identity, and that this is the builder's only project in this hackathon.</li>
+    <li>Record and host a 2–3 minute presentation plus a separate product demo of no more than 3 minutes; add the final links to the portal.</li>
+    <li>Re-run tests, build, live verification, and deployed browser checks on recording day. For the Solami side track, demonstrate both authenticated Solami RPC passports and the 20-mint WebSocket watcher against live mainnet; zero state changes during a short recording must be reported as zero.</li>
+    <li>Disclose all pre-existing code and prior Stocklana work exactly as the Colosseum form requests.</li>
+    <li>Submit before the Colosseum deadline. A separate Superteam Earn submission is required for any eligible side track.</li>
+  </ul>
+
+  <p>Rules: <a href="https://colosseum.com/hackathon">Colosseum official hackathon FAQ</a> · <a href="https://superteam.fun/earn/listing/superteam-my-x-solami-build-global-buatan-malaysia">Superteam MY Solami side track</a></p>
+</body>
+</html>

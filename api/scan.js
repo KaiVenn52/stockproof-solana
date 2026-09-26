@@ -20,7 +20,13 @@ const allowed = assetBySymbol
 // Read-only chain access is the one source that can rate-limit a live demo, so
 // StockProof walks an explicit endpoint list instead of trusting a single host.
 // The endpoint that actually answered is reported back as evidence.
-const rpcEndpoints = () => [...new Set([process.env.SOLANA_RPC_URL, DEFAULT_RPC, FALLBACK_RPC].filter(Boolean))]
+const rpcEndpoints = () => {
+  const solamiKey = process.env.SOLAMI_API_KEY?.trim()
+  // In the Solami build the data path must be real and attributable. Do not
+  // silently fall back to a public RPC if authentication or Solami fails.
+  if (solamiKey) return [`https://rpc.solami.dev/sol?api_key=${encodeURIComponent(solamiKey)}`]
+  return [...new Set([process.env.SOLANA_RPC_URL, DEFAULT_RPC, FALLBACK_RPC].filter(Boolean))]
+}
 
 // A public RPC that hangs is as damaging as one that errors, so each endpoint
 // gets its own budget. Without this the shared request deadline would be spent
