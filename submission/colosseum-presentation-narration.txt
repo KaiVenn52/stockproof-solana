@@ -8,4 +8,4 @@ The first user is an integrator building a wallet, collateral system, index, or 
 
 Solana is essential here. Token twenty twenty-two extensions and confirmed account state are the source of truth for displayed balances and controls. We read mainnet through Solami, and the separate watcher can reissue a passport if a tracked mint actually changes.
 
-This is a working, read-only product built during the hackathon window, with prior work disclosed in the repository history. It is not a trading signal or an independent custody audit. Its purpose is to stop a hidden asset-state mismatch before composability spreads it into another application.
+This is a working, read-only product developed during the hackathon window. The dated repository history is public, and any pre-existing work will be disclosed in the submission form. It is not a trading signal or an independent custody audit. Its purpose is to stop a hidden asset-state mismatch before composability spreads it into another application.
