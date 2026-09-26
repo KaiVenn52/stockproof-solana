@@ -107,7 +107,7 @@ SOLAMI_API_KEY=your_key_here
 
 Do not use a wallet keypair or commit this file. With `SOLAMI_API_KEY` present, `/api/scan` reads the Token-2022 mint **only through Solami RPC** and does not fall back to a public endpoint. The passport reports `rpc.solami.dev` as its chain evidence source but never returns the key. A deployment without this server-side environment variable still uses public RPC; check the returned chain evidence before claiming a Solami-backed demo. Do not set a `VITE_` variable or expose a broad key in browser code.
 
-The watcher is a separate live-mainnet developer tool: it takes a confirmed Solami snapshot of all 20 pinned mints, then subscribes to those mint accounts and advancing slots through Solami WebSocket. It reports parsed multiplier, supply, pause and freeze-authority changes; it does not invent a change when none occurred.
+The watcher is a separate live-mainnet developer tool: it takes a confirmed Solami snapshot of all 20 pinned mints, then subscribes to those mint accounts and advancing slots through Solami WebSocket. It reports parsed multiplier, supply, pause and freeze-authority changes and automatically reissues a full passport for any changed mint. It does not invent a change when none occurred.
 
 ```powershell
 npm.cmd run solami:verify
@@ -115,7 +115,7 @@ npm.cmd run solami:watch -- --duration=30
 # --duration=0 keeps the watcher running until Ctrl+C
 ```
 
-The first command proves that all live passports used `rpc.solami.dev`. The second prints JSONL `snapshot`, `connected`, `health`, `mint_changed` (only when real), and `summary` events. A short recording may show zero mint changes because these fields change rarely; the confirmed snapshot, 20 subscriptions, and advancing slots are observable without fabricating activity. WebSocket monitoring runs as a Node process, not inside the Vercel serverless route, and requires an always-on host if offered as a continuous service.
+The first command proves that all live passports used `rpc.solami.dev`. The second prints JSONL `snapshot`, `connected`, `health`, `mint_changed` (only when real), `passport_refreshed` (after a real mint change), and `summary` events. A short recording may show zero mint changes because these fields change rarely; the confirmed snapshot, 20 subscriptions, and advancing slots are observable without fabricating activity. WebSocket monitoring runs as a Node process, not inside the Vercel serverless route, and requires an always-on host if offered as a continuous service.
 
 ## Verify
 

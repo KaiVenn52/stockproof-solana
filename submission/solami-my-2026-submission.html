@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StockProof — Superteam MY × Solami side-track draft</title>
+  <style>
+    body{font:16px/1.55 system-ui,sans-serif;max-width:850px;margin:auto;padding:32px 20px;color:#17202b}
+    h2{margin-top:2rem;border-bottom:1px solid #ccd4dc;padding-bottom:.35rem}
+    a{color:#185cb0}code{background:#edf1f5;padding:.1rem .3rem;border-radius:3px}
+    .status{border-left:4px solid #a55b00;background:#fff5e7;padding:12px 16px}
+  </style>
+</head>
+<body>
+  <h1>StockProof × Solami</h1>
+  <p>Real-time integrity monitoring for tokenized equities on Solana.</p>
+  <p class="status"><strong>Draft, not submitted.</strong> Public product and source are live. A 2:29 mainnet demo is recorded locally but has not yet been reviewed or uploaded. The Colosseum and Superteam Earn submission URLs are still missing; both portals require separate submission.</p>
+  <p><a href="https://stockproof-solana.vercel.app">Working mainnet product</a> · <a href="https://github.com/KaiVenn52/stockproof-solana">Public GitHub repository</a> · <a href="https://colosseum.com/hackathon">Colosseum rules</a> · <a href="https://superteam.fun/earn/listing/superteam-my-x-solami-build-global-buatan-malaysia">Solami track rules</a></p>
+
+  <h2>The user and problem</h2>
+  <p>A wallet, lending-market, index, or agent developer integrating tokenized equities needs more than a ticker and a price. An issuer can change a mint, a Token-2022 Scaled UI multiplier can change displayed balances, transfers can be paused, and a corporate-action feed can contain stale records. These are integration failures, not price predictions.</p>
+
+  <h2>What the product does</h2>
+  <p>StockProof issues a versioned, evidence-backed passport for 20 reviewed xStocks on Solana. It reconciles official issuer data with the live Token-2022 mint and returns PASS, CAUTION, BLOCKED, or UNVERIFIABLE. The passport includes the Solana slot, capture time, source endpoint, and check-by-check evidence. Missing required evidence never becomes a clean PASS. The public UI and JSON API are working on mainnet.</p>
+
+  <h2>Why Solami is the core data path</h2>
+  <p>When configured for this deployment, every passport's required mint-account check uses Solami RPC exclusively. The route fails closed if Solami is unavailable instead of quietly returning a public-RPC passport. The public API exposes <code>rpc.solami.dev</code> as the chain evidence source without exposing the key.</p>
+  <p>The companion monitor calls Solami <code>getMultipleAccounts</code> for a confirmed snapshot of all 20 pinned mints, then holds one authenticated Solami WebSocket connection with 20 <code>accountSubscribe</code> filters plus <code>slotSubscribe</code>. On an actual mint-state change it compares the fields relevant to integrity—supply, Scaled UI multiplier schedule, pause flag, and freeze authority—and automatically reissues a full passport. This is an operational watch path, not a decorative provider logo or a single sample API call.</p>
+
+  <h2>Observed live metrics</h2>
+  <p>On September 27, 2026 (Malaysia time), the Solami-backed verifier scanned all 20 pinned assets: 9 PASS, 11 CAUTION, 0 BLOCKED, and 0 UNVERIFIABLE. The WebSocket test established 20 account subscriptions, observed advancing mainnet slots, and recorded 0 mint-state changes during its brief run. Zero is reported as zero; no synthetic activity is presented as a live event. The public TSLAx passport returned HTTP 200, live PASS, a positive confirmed slot, and chain source <code>rpc.solami.dev</code>. These figures are point-in-time observations and should be refreshed on submission day.</p>
+
+  <h2>How judges can run it</h2>
+  <p>Clone the public repository, run <code>npm install</code>, and place a standard read-only Solami key in the Git-ignored <code>.env.local</code> as <code>SOLAMI_API_KEY=...</code>. Run <code>npm run solami:verify</code> for authenticated passports and <code>npm run solami:watch -- --duration=30</code> for the live account/slot watcher. The README documents setup, evidence, fail-closed behavior, and the difference between the Vercel API and the separate long-running watcher. No wallet or transaction signature is required.</p>
+
+  <h2>What this does not claim</h2>
+  <p>StockProof does not execute trades, independently audit offchain custody, or claim third-party integrations or paying users. Its proof-of-reserves ratio compares two issuer-reported numbers. The watcher is a runnable Node process, not an always-on hosted alert service. A short demo may show no account changes because mint parameters change infrequently.</p>
+
+  <h2>Submission checklist</h2>
+  <ul>
+    <li>Record and upload a 2–3 minute video of the real public mainnet product, Solami provenance, and live WebSocket watcher metrics.</li>
+    <li>Complete the single Colosseum project submission, including its separate presentation video and no-longer-than-three-minute demo video; disclose prior code and Stocklana work.</li>
+    <li>Submit this same project separately to the Superteam MY × Solami listing, with the Colosseum submission URL and public video URL.</li>
+    <li>Re-run live verification before submission, then rotate any key that has been shared in a chat and update the deployment environment.</li>
+  </ul>
+</body>
+</html>

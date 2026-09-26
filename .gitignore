@@ -17,6 +17,10 @@ submission/market-integrity-desk-demo.srt
 *.tsbuildinfo
 test-results/
 playwright-report/
+submission/*.mp4
+submission/*.webm
+submission/*.mp3
+submission/*.vtt
 vite.config.js
 vite.config.d.ts
 

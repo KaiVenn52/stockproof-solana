@@ -1,0 +1,11 @@
+Tokenized stocks are becoming building blocks for wallets, lending markets, and autonomous agents. But most integrations still begin with a ticker, a logo, and a price. Those are not enough to know whether the asset behind the ticker is the asset your application intended to accept.
+
+StockProof is a preflight integrity layer for tokenized equities on Solana. It turns a ticker into an inspectable passport before another application treats that token as trusted input. The passport says PASS, CAUTION, BLOCKED, or UNVERIFIABLE, and it carries the evidence behind that decision.
+
+The sharpest example is NFLXx. After a split, its effective Token twenty twenty-two Scaled UI multiplier is ten. A product that shows the raw token amount as the user-visible balance can be wrong by a factor of ten, while a price feed looks perfectly normal. StockProof reads that onchain extension, chooses the effective value by time, and compares it with the issuer's published multiplier. It also checks the exact mint, pause controls, reported reserve coverage, and corporate-action schedule. If required evidence is absent, it abstains instead of guessing.
+
+The first user is an integrator building a wallet, collateral system, index, or agent workflow around tokenized equities. The public site demonstrates the workflow; the versioned JSON API and schema let a developer enforce a policy in their own application. There are no claimed customers or third-party integrations today. The next step is direct conversations with integrators to learn which checks they would make mandatory, then expand coverage without losing the reviewed mint registry.
+
+Solana is essential here. Token twenty twenty-two extensions and confirmed account state are the source of truth for displayed balances and controls. We read mainnet through Solami, and the separate watcher can reissue a passport if a tracked mint actually changes.
+
+This is a working, read-only product built during the hackathon window, with prior work disclosed in the repository history. It is not a trading signal or an independent custody audit. Its purpose is to stop a hidden asset-state mismatch before composability spreads it into another application.

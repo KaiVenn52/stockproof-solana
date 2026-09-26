@@ -1,0 +1,11 @@
+This is StockProof, a live preflight check for tokenized equities on Solana. The page you are seeing is the public deployment, not a mocked dashboard. Every passport starts with one question: can another application trust this exact tokenized stock right now?
+
+Here is AAPLx. The ticker is matched to a pinned issuer mint, then StockProof reads the Token twenty twenty-two mint on Solana mainnet through Solami RPC. It checks the effective balance multiplier, pause controls, reported reserves, and the issuer's corporate action schedule. A caution is visible because the issuer's upcoming feed still contains records marked scheduled after their effective time. We report a source-quality warning; we do not claim the corporate action failed.
+
+Now NFLXx. Its effective onchain Scaled UI multiplier is ten after a split. If an integrator displays the raw token amount as a user balance, that can be wrong by a factor of ten. The passport compares the onchain extension with issuer metadata and retains the confirmed Solana slot used for the decision.
+
+Switching to TSLAx runs the whole graph again. This scan is a clean PASS at the current evidence boundary. In the provenance panel, the chain source is Solami RPC, and the exact mint, slot, endpoint, and capture time are visible. The API returns the same versioned JSON, so a wallet or lending app can enforce its own policy instead of trusting a screenshot.
+
+Solami does more than answer one request here. A separate open-source watcher takes a confirmed snapshot of all twenty pinned mints, subscribes to those accounts and live slots through Solami WebSocket, and automatically reissues a passport if a tracked mint actually changes. In our short test the slots advanced and all twenty subscriptions were active; no mint change occurred, so we do not invent one.
+
+The Surface view is a sample consumer. It allows only a fresh live PASS and stops cautions, failures, or missing evidence. No external integration or independent custody audit is claimed. StockProof is a working, read-only integrity layer, built so a bad assumption about a tokenized stock does not silently travel into another app.

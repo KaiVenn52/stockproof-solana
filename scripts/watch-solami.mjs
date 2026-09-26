@@ -1,5 +1,6 @@
 import { ASSETS } from '../shared/assets.js'
 import { changedFields, trackedMintState } from '../shared/solami-monitor.js'
+import handler from '../api/scan.js'
 
 const key = process.env.SOLAMI_API_KEY?.trim()
 if (!key) {
@@ -23,8 +24,10 @@ const subscriptionToMint = new Map()
 let latestSlot = 0
 let updates = 0
 let changes = 0
+let rescans = 0
 let socket
 let stopping = false
+const pendingRescans = new Set()
 
 async function rpc(method, params) {
   const controller = new AbortController()
@@ -47,8 +50,30 @@ async function rpc(method, params) {
 function stop(reason) {
   if (stopping) return
   stopping = true
-  emit('summary', { reason, trackedMints: ASSETS.length, subscriptions: subscriptionToMint.size, latestSlot, updates, changes })
+  emit('summary', { reason, trackedMints: ASSETS.length, subscriptions: subscriptionToMint.size, latestSlot, updates, changes, rescans })
   socket?.close()
+}
+
+async function rescanChangedMint(asset, changedAtSlot) {
+  if (pendingRescans.has(asset.mint)) return
+  pendingRescans.add(asset.mint)
+  try {
+    const passport = await new Promise((resolve, reject) => {
+      const response = {
+        statusCode: 200,
+        setHeader() {},
+        status(code) { this.statusCode = code; return this },
+        json(payload) { this.statusCode >= 400 ? reject(new Error('Passport scan unavailable')) : resolve(payload) },
+      }
+      handler({ method: 'GET', query: { symbol: asset.symbol } }, response).catch(reject)
+    })
+    rescans += 1
+    emit('passport_refreshed', { symbol: asset.symbol, changedAtSlot, passportSlot: passport.rpcSlot, passportId: passport.passportId, state: passport.state, source: passport.evidence.find((item) => item.id === 'chain')?.source })
+  } catch {
+    emit('passport_refresh_failed', { symbol: asset.symbol, changedAtSlot })
+  } finally {
+    pendingRescans.delete(asset.mint)
+  }
 }
 
 try {
@@ -108,6 +133,7 @@ try {
     if (fields.length) {
       changes += 1
       emit('mint_changed', { symbol: asset.symbol, mint, slot, fields, multiplier: next.multiplier, nextMultiplier: next.newMultiplier, paused: next.paused })
+      void rescanChangedMint(asset, slot)
     }
   })
   socket.addEventListener('error', () => {
@@ -123,7 +149,7 @@ try {
       stop('stream_closed')
     }
   })
-  const heartbeat = setInterval(() => emit('health', { latestSlot, subscriptions: subscriptionToMint.size, updates, changes }), 5_000)
+  const heartbeat = setInterval(() => emit('health', { latestSlot, subscriptions: subscriptionToMint.size, updates, changes, rescans }), 5_000)
   heartbeat.unref()
   if (durationSeconds) setTimeout(() => stop('duration_elapsed'), durationSeconds * 1000)
   process.once('SIGINT', () => stop('interrupted'))
